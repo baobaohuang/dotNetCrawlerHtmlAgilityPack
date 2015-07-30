@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -12,10 +12,32 @@ namespace crawler2
     {
         static void Main(string[] args)
         {
+            string str;
+            str = Console.ReadLine();
+
+            if (string.IsNullOrEmpty(str))
+            {
+                List<string> StockID = new List<string>();
+                StockID.Add("2498");
+                StockID.Add("9904");
+                StockID.ForEach(getdata);                
+            }
+            else
+            {
+                getdata(str);
+            }
+
+            Console.WriteLine("Completed.");
+            Console.ReadLine();
+
+        }
+
+        static void getdata(string stock)
+        {
             // 下載 Yahoo 奇摩股市資料 (範例為 2317 鴻海) 
             WebClient client = new WebClient();
             MemoryStream ms = new MemoryStream(client.DownloadData(
-        "http://tw.stock.yahoo.com/q/q?s=2317"));
+        "http://tw.stock.yahoo.com/q/q?s="+stock));
 
             // 使用預設編碼讀入 HTML 
             HtmlDocument doc = new HtmlDocument();
@@ -46,10 +68,8 @@ namespace crawler2
             doc = null;
             docStockContext = null;
             client = null;
-            ms.Close();
+            ms.Close();            
 
-            Console.WriteLine("Completed.");
-            Console.ReadLine(); 
         }
     }
 }
