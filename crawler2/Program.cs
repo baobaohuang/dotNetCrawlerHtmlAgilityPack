@@ -98,7 +98,8 @@ namespace crawler2
          docStockContext.DocumentNode.SelectNodes("./tr[1]/th");
 
             // 取得個股數值
-            stock[] stocks = new stock[50];
+            //stock[] stocks = new stock[50];
+            List<stock> stocks = new List<stock>();
             int i = 0;
             for (int stock = 2; stock < 52; stock++)
             {
@@ -110,25 +111,23 @@ namespace crawler2
                 decimal a =  Convert.ToDecimal(values[10].Trim());
                 decimal b =  Convert.ToDecimal(values[11].Trim());
                 decimal c =  Convert.ToDecimal(values[10].Trim()) - Convert.ToDecimal(values[11].Trim());
-                stocks[i] = new stock { Name = values[0].Trim(), HighPrice = a, LowPrice = b, PriceDrop = c, Percent = decimal.Round(c * 100 / a,1) };
-                Console.Write(stocks[i].Name);
-                Console.Write(stocks[i].PriceDrop);
-                Console.Write(" " + stocks[i].Percent +"%");
-                Console.Write("\n");
+                stock x = new stock { Name = values[0].Trim(), HighPrice = a, LowPrice = b, PriceDrop = c, Percent = decimal.Round(c * 100 / a, 1) };
+                stocks.Add ( x);                
             }
 
-
-            //IEnumerable<stock> query = stocks.OrderByDescending( x =>(x).Percent);
+            
+            //Array.Sort(stocks, delegate(stock x, stock y) { return x.Percent.CompareTo(y.Percent); });
+            IEnumerable<stock> query = stocks.OrderByDescending( x =>x.Percent);
             ////IEnumerable<stock> query = from e in stocks orderby e.Percent descending select e;
             ////var query = from e in stocks orderby e.Percent select e;
             ////var query = stocks.OrderBy(x => x.Percent);
-            //foreach (stock output in query )
-            //{
-            //    Console.Write(output.Name);
-            //    Console.Write(output.PriceDrop);
-            //    Console.Write(" " + output.Percent);
-            //    Console.Write("\n");
-            //}
+            foreach (stock output in query)
+            {
+                Console.Write(output.Name);
+                Console.Write(output.PriceDrop);
+                Console.Write(" " + output.Percent);
+                Console.Write("\n");
+            }
 
             doc = null;
             docStockContext = null;
